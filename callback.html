@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Twitch Follower Guard - OAuth</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    body {
+      align-items: center;
+      background: #0e0e10;
+      color: #efeff1;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+      min-height: 100vh;
+    }
+    main {
+      background: #18181b;
+      border: 1px solid #2f2f35;
+      border-radius: 12px;
+      max-width: 34rem;
+      padding: 2rem;
+    }
+    h1 {
+      color: #a970ff;
+      font-size: 1.35rem;
+      margin-top: 0;
+    }
+    p {
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+    code {
+      color: #bf94ff;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Twitch Follower Guard</h1>
+    <p id="message">Procesando la autorización de Twitch...</p>
+  </main>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var code = params.get("code");
+      var state = params.get("state");
+      var error = params.get("error");
+      var description = params.get("error_description");
+      var message = document.getElementById("message");
+
+      if (code && state) {
+        var target = "http://localhost:17563/?code=" + encodeURIComponent(code) +
+          "&state=" + encodeURIComponent(state);
+        window.location.replace(target);
+        return;
+      }
+
+      if (error) {
+        message.textContent = "Autorización cancelada: " + error +
+          (description ? " (" + description + ")" : "");
+        return;
+      }
+
+      message.textContent = "Página de callback de Twitch Follower Guard. " +
+        "Puedes cerrar esta pestaña.";
+    })();
+  </script>
+</body>
+</html>
